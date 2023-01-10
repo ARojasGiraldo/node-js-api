@@ -1,4 +1,5 @@
 const { faker } = require('@faker-js/faker');
+const boom = require('@hapi/boom');
 
 class UsersServices {
   constructor() {
@@ -13,23 +14,24 @@ class UsersServices {
         id: faker.datatype.uuid(),
         name: faker.name.fullName(),
         email: faker.internet.email(),
+        isBlock: faker.datatype.boolean(),
       });
     }
   }
 
-  created(data) {
+  async created(data) {
     const newUser = {
-      id: faker.datatype.uuid,
+      id: faker.datatype.uuid(),
       ...data,
     };
-    this.users(newUser);
+    this.users.push(newUser);
     return newUser;
   }
 
-  update(id, changes) {
+  async update(id, changes) {
     const index = this.users.findIndex((item) => item.id === id);
     if (index === -1) {
-      throw new Error('product not found');
+      throw boom.notFound('user not found');
     }
     const user = this.users[index];
     this.users[index] = {
@@ -39,21 +41,32 @@ class UsersServices {
     return this.users[index];
   }
 
-  delete(id) {
+  async delete(id) {
     const index = this.users.findIndex((item) => item.id === id);
     if (index === -1) {
-      throw new Error('product not found');
+      throw boom.notFound('product not found');
     }
     this.users.splice(index, 1);
     return { id };
   }
 
   find() {
-    return this.user;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.users);
+      }, 3000);
+    });
   }
 
-  findOne(id) {
-    return this.user.find((item) => item.id === id);
+  async findOne(id) {
+    const user = this.user.find((item) => item.id === id);
+    if (!user) {
+      throw boom.notFound('product not found');
+    }
+    if (user.isBlock) {
+      throw boom.conflict('user is block');
+    }
+    return user;
   }
 }
 
