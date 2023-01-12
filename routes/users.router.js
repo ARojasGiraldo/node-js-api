@@ -11,9 +11,13 @@ const router = express.Router();
 
 const users = new UsersServices();
 
-router.get('/', async (req, res) => {
-  const user = await users.find();
-  res.json(user);
+router.get('/', async (req, res, next) => {
+  try {
+    const user = await users.find();
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get(
