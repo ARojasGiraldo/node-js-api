@@ -1,6 +1,6 @@
 const { faker } = require('@faker-js/faker');
 const boom = require('@hapi/boom');
-const pool = require('../libs/postgres.pool');
+const pool = require('../libs/postgre.pool');
 
 class CategoriesServices {
   constructor() {

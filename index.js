@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const routerApi = require('./routes/index');
+const morgan = require('morgan');
 const {
   logErrors,
   errorHandler,
@@ -21,6 +22,8 @@ const options = {
     }
   },
 };
+
+app.use(morgan('dev'));
 
 app.use(cors(options));
 
