@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const routerApi = require('./routes/index');
+const { config } = require('./config/config');
 const morgan = require('morgan');
 const {
   logErrors,
@@ -8,7 +9,6 @@ const {
   boomErrorHandler,
 } = require('./middlewares/error.handler');
 const app = express();
-const port = 3005;
 
 app.use(express.json());
 
@@ -37,6 +37,6 @@ app.use(logErrors);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`My port is http://localhost:${port}`);
+app.listen(config.port, () => {
+  console.log(`My port is http://localhost:${config.port}`);
 });
